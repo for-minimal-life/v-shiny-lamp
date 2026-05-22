@@ -12,13 +12,17 @@ public class ExternalApiClient {
 
     private final RestTemplate restTemplate;
 
+    private final String serverUrl;
+
     @Autowired
-    public ExternalApiClient(@Qualifier("hmacRestTemplate") RestTemplate restTemplate) {
+    public ExternalApiClient(@Qualifier("hmacRestTemplate") RestTemplate restTemplate,
+                             @org.springframework.beans.factory.annotation.Value("${api.server.url}") String serverUrl) {
         this.restTemplate = restTemplate;
+        this.serverUrl = serverUrl;
     }
 
     public String fetchData() {
-        String url = "https://api.example.com/api/v1/data";
+        String url = serverUrl + "/api/v1/data";
         try {
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
             return response.getBody();
